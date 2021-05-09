@@ -59,15 +59,15 @@ func BenchmarkMaxHeap_PushPreallocate(b *testing.B) {
 func BenchmarkMaxHeap_Pop(b *testing.B) {
 	rand.Seed(42)
 	data := make([]uint32, b.N)
-	dist := make([]float32, b.N)
+	prio := make([]float32, b.N)
 	for i := 0; i < len(data); i++ {
 		data[i] = rand.Uint32()
-		dist[i] = rand.Float32()
+		prio[i] = rand.Float32()
 	}
 
 	pq := prioqueue.NewMaxHeap(b.N)
 	for i := 0; i < len(data); i++ {
-		pq.Push(data[i], dist[i])
+		pq.Push(data[i], prio[i])
 	}
 
 	b.ResetTimer()

@@ -80,8 +80,8 @@ func runTestsN(t *testing.T, pq PriorityQueue, checkOrder orderFunc, n int) {
 
 	rng := rand.New(rand.NewSource(42))
 	for i := 0; i < n; i++ {
-		dist := rng.Float32()
-		pq.Push(uint32(i), dist)
+		prio := rng.Float32()
+		pq.Push(uint32(i), prio)
 	}
 
 	assert.Equal(t, n, pq.Len())
