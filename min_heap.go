@@ -1,8 +1,14 @@
 package prioqueue
 
-// MinHeap implements a binary heap which is efficiently encoded in a slice.
-// Since the heap is maintained in form of a binary tree, it can be represented
-// in the form on an array.
+// MinHeap implements a priority queue which allows to retrieve the lowest
+// priority element using a heap. Since the heap is maintained in form of a
+// binary tree, it can efficiently be represented in the form of a list.
+//
+// The priority queue has the following properties:
+//   - items with low priority are dequeued before elements with higher priority
+//   - the item at the root of the tree is the minimum among all items present
+//     in the binary heap. The same property is recursively true for all nodes
+//     in the tree.
 //
 // Array representation
 //
@@ -13,30 +19,32 @@ package prioqueue
 // Generally speaking, the parent of index i is at index (i-1)/2. The two
 // children of index i are at (2*i)+1 and (2*i)+2.
 //
-// The priority queue has the following properties:
-//   - items with low distance are dequeued before elements with higher distance (closest first)
-//   - the item at the root of the tree is the minimum among all items present
-//     in the binary heap. The same property is recursively true for all nodes in binary tree.
-//
 // Time Complexity
 //
-//   Push and Pop take O(log N) and Top() happens in constant time.
+//   Push and Pop take O(log n) and Top() happens in constant time.
 type MinHeap struct {
 	items []*Item
 }
 
+// Item is an element in a priority queue.
 type Item struct {
 	ID   uint32
 	Prio float32
 }
 
+// NewMinHeap returns a new MinHeap instance which contains a pre-allocated
+// backing array for the stored items. Usage of this function or setting a
+// correct size is optional. If more items are inserted into the queue than
+// there is space in the backing array, it grows automatically.
 func NewMinHeap(size int) *MinHeap {
 	return &MinHeap{
 		items: make([]*Item, 0, size),
 	}
 }
 
-func (h *MinHeap) Top() (uint32, float32) {
+// Top returns the ID and priority of the item with the lowest priority value in
+// the queue without removing it.
+func (h *MinHeap) Top() (id uint32, prio float32) {
 	i := h.TopItem()
 	if i == nil {
 		return 0, 0
@@ -45,6 +53,8 @@ func (h *MinHeap) Top() (uint32, float32) {
 	return i.ID, i.Prio
 }
 
+// TopItem returns the item with the lowest priority value in the queue without
+// removing it.
 func (h *MinHeap) TopItem() *Item {
 	if len(h.items) == 0 {
 		return nil
@@ -52,20 +62,26 @@ func (h *MinHeap) TopItem() *Item {
 	return h.items[0]
 }
 
+// Len returns the amount of elements in the queue.
 func (h *MinHeap) Len() int {
 	return len(h.items)
 }
 
+// Reset is a fast way to empty the queue. Note that the underlying array will
+// still be used by the heap which means that this function will not free up any
+// memory. If you need to release memory, you have to create a new instance and
+// let this one be taken care of by the garbage collection.
 func (h *MinHeap) Reset() {
 	h.items = h.items[0:0]
 }
 
 // Push the value item into the priority queue with provided priority.
-func (h *MinHeap) Push(id uint32, d float32) {
-	item := &Item{ID: id, Prio: d}
+func (h *MinHeap) Push(id uint32, priority float32) {
+	item := &Item{ID: id, Prio: priority}
 	h.PushItem(item)
 }
 
+// PushItem adds an Item to the queue.
 func (h *MinHeap) PushItem(item *Item) {
 	// Add new item to the end of the list and then let it bubble up the binary
 	// tree until the heap property is restored.
@@ -84,6 +100,8 @@ func (h *MinHeap) PushItem(item *Item) {
 	}
 }
 
+// Pop removes the item with the lowest priority value from the queue and
+// returns its ID and priority.
 func (h *MinHeap) Pop() (id uint32, priority float32) {
 	i := h.PopItem()
 	if i == nil {
@@ -93,6 +111,7 @@ func (h *MinHeap) Pop() (id uint32, priority float32) {
 	return i.ID, i.Prio
 }
 
+// PopItem removes the item with the lowest priority value from the queue.
 func (h *MinHeap) PopItem() *Item {
 	if len(h.items) == 0 {
 		return nil

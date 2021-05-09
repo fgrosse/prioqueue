@@ -28,6 +28,8 @@ func assertBiggestFirst(current, last float32) bool {
 }
 
 func runTests(t *testing.T, pq PriorityQueue, checkOrder orderFunc) {
+	t.Helper()
+
 	items := []prioqueue.Item{
 		{ID: 1, Prio: 10},
 		{ID: 2, Prio: 20},
