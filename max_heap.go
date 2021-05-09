@@ -60,6 +60,10 @@ func (h *MaxHeap) PushItem(item *Item) {
 
 func (h *MaxHeap) Pop() (id uint32, priority float32) {
 	i := h.PopItem()
+	if i == nil {
+		return 0, 0
+	}
+
 	return i.ID, i.Prio
 }
 

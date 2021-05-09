@@ -86,6 +86,10 @@ func (h *MinHeap) PushItem(item *Item) {
 
 func (h *MinHeap) Pop() (id uint32, priority float32) {
 	i := h.PopItem()
+	if i == nil {
+		return 0, 0
+	}
+
 	return i.ID, i.Prio
 }
 

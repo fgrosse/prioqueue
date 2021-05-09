@@ -67,6 +67,15 @@ func runTests(t *testing.T, pq PriorityQueue, checkOrder orderFunc) {
 }
 
 func runTestsN(t *testing.T, pq PriorityQueue, checkOrder orderFunc, n int) {
+	// Sanity checks on PriorityQueue to see it does not panic if it is empty.
+	topID, topPrio := pq.Top()
+	assert.EqualValues(t, 0, topID)
+	assert.EqualValues(t, 0, topPrio)
+
+	id, prio := pq.Pop()
+	assert.EqualValues(t, 0, id)
+	assert.EqualValues(t, 0, prio)
+
 	rng := rand.New(rand.NewSource(42))
 	for i := 0; i < n; i++ {
 		dist := rng.Float32()
