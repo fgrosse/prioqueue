@@ -118,22 +118,21 @@ func (h *MinHeap) PopItem() *Item {
 	}
 
 	root := h.items[0]
+	maxIndex := len(h.items) - 1
 
 	// swap first and last element
-	h.items[0], h.items[len(h.items)-1] = h.items[len(h.items)-1], h.items[0]
-
-	// remove last element
-	h.items = h.items[0 : len(h.items)-1]
+	h.items[0], h.items[maxIndex] = h.items[maxIndex], h.items[0]
+	h.items = h.items[0:maxIndex]
 
 	// restore heap property
-	h.sink()
+	h.shiftDown()
 
 	return root
 }
 
-// sink restores the heap property by shifting down the root node in the binary
+// shiftDown restores the heap property by shifting down the root node in the binary
 // tree until the heap property is satisfied.
-func (h *MinHeap) sink() {
+func (h *MinHeap) shiftDown() {
 	maxIndex := len(h.items) - 1
 	i := 0 // start at the root node
 	for {
