@@ -61,10 +61,10 @@ func TestStdHeap(t *testing.T) {
 }
 
 func BenchmarkStdlib_PushEmpty(b *testing.B) {
-	rand.Seed(42)
+	rng := rand.New(rand.NewSource(42))
 	values := make([]float32, b.N)
 	for i := range values {
-		values[i] = rand.Float32()
+		values[i] = rng.Float32()
 	}
 
 	n := uint32(b.N)
@@ -80,10 +80,10 @@ func BenchmarkStdlib_PushEmpty(b *testing.B) {
 }
 
 func BenchmarkStdlib_PushPreallocate(b *testing.B) {
-	rand.Seed(42)
+	rng := rand.New(rand.NewSource(42))
 	values := make([]float32, b.N)
 	for i := range values {
-		values[i] = rand.Float32()
+		values[i] = rng.Float32()
 	}
 
 	n := uint32(b.N)
@@ -99,12 +99,12 @@ func BenchmarkStdlib_PushPreallocate(b *testing.B) {
 }
 
 func BenchmarkStdlibHeap_Pop(b *testing.B) {
-	rand.Seed(42)
+	rng := rand.New(rand.NewSource(42))
 	data := make([]uint32, b.N)
 	prio := make([]float32, b.N)
 	for i := 0; i < len(data); i++ {
-		data[i] = rand.Uint32()
-		prio[i] = rand.Float32()
+		data[i] = rng.Uint32()
+		prio[i] = rng.Float32()
 	}
 
 	h := new(StdHeap)

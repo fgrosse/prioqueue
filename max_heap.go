@@ -1,3 +1,5 @@
+// Package prioqueue implements an efficient min and max priority queue using a
+// binary heap encoded in a slice.
 package prioqueue
 
 // MaxHeap implements a priority queue which allows to retrieve the highest
