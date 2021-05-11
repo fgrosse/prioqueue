@@ -3,7 +3,7 @@
 Package `prioqueue` implements an efficient min and max priority queue using a
 binary heap encoded in a slice.   
 
-# Example usage
+## Example usage
 
 [embedmd]:# (example_test.go)
 ```go
@@ -55,9 +55,9 @@ func Example() {
 }
 ```
 
-# TODO: describe how it works
+## TODO: describe how it works
 
-# TODO: explain why this is faster than the stdlib
+## TODO: explain why this is faster than the stdlib
 
 ## Benchmarks
 
