@@ -36,10 +36,15 @@ type Item struct {
 // backing array for the stored items. Usage of this function or setting a
 // correct size is optional. If more items are inserted into the queue than
 // there is space in the backing array, it grows automatically.
+//
+// If you do not know the size in advance you can set the argument to 0 or a
+// negative value.
 func NewMinHeap(size int) *MinHeap {
-	return &MinHeap{
-		items: make([]*Item, 0, size),
+	h := new(MinHeap)
+	if size > 0 {
+		h.items = make([]*Item, 0, size)
 	}
+	return h
 }
 
 // Top returns the ID and priority of the item with the lowest priority value in
@@ -102,6 +107,11 @@ func (h *MinHeap) PushItem(item *Item) {
 
 // Pop removes the item with the lowest priority value from the queue and
 // returns its ID and priority.
+//
+// Note that while popping an element from the heap will also remove it from the
+// queue but it will not release the memory in the backing array as long as the
+// heap is still in use.
+// See https://blog.golang.org/slices-intro#TOC_6.
 func (h *MinHeap) Pop() (id uint32, priority float32) {
 	i := h.PopItem()
 	if i == nil {
