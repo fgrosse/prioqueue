@@ -13,16 +13,16 @@ import (
 // provide a baseline for benchmarks
 type StdHeap []*prioqueue.Item
 
-func (h StdHeap) Len() int {
-	return len(h)
+func (h *StdHeap) Len() int {
+	return len(*h)
 }
 
-func (h StdHeap) Less(i, j int) bool {
-	return h[i].Prio < h[j].Prio
+func (h *StdHeap) Less(i, j int) bool {
+	return (*h)[i].Prio < (*h)[j].Prio
 }
 
-func (h StdHeap) Swap(i, j int) {
-	h[i], h[j] = h[j], h[i]
+func (h *StdHeap) Swap(i, j int) {
+	(*h)[i], (*h)[j] = (*h)[j], (*h)[i]
 }
 
 func (h *StdHeap) Push(x interface{}) {
@@ -58,64 +58,4 @@ func TestStdHeap(t *testing.T) {
 		last = item.Prio
 	}
 	assert.Equal(t, 0, q.Len())
-}
-
-func BenchmarkStdlib_PushEmpty(b *testing.B) {
-	rng := rand.New(rand.NewSource(42))
-	values := make([]float32, b.N)
-	for i := range values {
-		values[i] = rng.Float32()
-	}
-
-	n := uint32(b.N)
-
-	h := new(StdHeap)
-	b.ResetTimer()
-	b.ReportAllocs()
-
-	for i := uint32(0); i < n; i++ {
-		item := &prioqueue.Item{ID: i, Prio: values[i]}
-		heap.Push(h, item)
-	}
-}
-
-func BenchmarkStdlib_PushPreallocate(b *testing.B) {
-	rng := rand.New(rand.NewSource(42))
-	values := make([]float32, b.N)
-	for i := range values {
-		values[i] = rng.Float32()
-	}
-
-	n := uint32(b.N)
-
-	h := make(StdHeap, 0, len(values))
-	b.ResetTimer()
-	b.ReportAllocs()
-
-	for i := uint32(0); i < n; i++ {
-		item := &prioqueue.Item{ID: i, Prio: values[i]}
-		heap.Push(&h, item)
-	}
-}
-
-func BenchmarkStdlibHeap_Pop(b *testing.B) {
-	rng := rand.New(rand.NewSource(42))
-	data := make([]uint32, b.N)
-	prio := make([]float32, b.N)
-	for i := 0; i < len(data); i++ {
-		data[i] = rng.Uint32()
-		prio[i] = rng.Float32()
-	}
-
-	h := new(StdHeap)
-	for i := 0; i < len(data); i++ {
-		item := &prioqueue.Item{ID: data[i], Prio: prio[i]}
-		heap.Push(h, item)
-	}
-
-	b.ResetTimer()
-	b.ReportAllocs()
-	for h.Len() > 0 {
-		heap.Pop(h)
-	}
 }

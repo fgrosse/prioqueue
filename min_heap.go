@@ -147,7 +147,8 @@ func (h *MinHeap) shiftDown() {
 	i := 0 // start at the root node
 	for {
 		j := 2*i + 1 // index of first child of i
-		if j > maxIndex {
+
+		if j > maxIndex || j < 0 { // j < 0 after int overflow
 			break // item i has no children
 		}
 
