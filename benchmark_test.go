@@ -177,44 +177,6 @@ func BenchmarkStdlib_Push200_Preallocate(b *testing.B) {
 	}
 }
 
-// BenchmarkStdlib_Push200_EmptyInit tests how fast we can push 200 elements on
-// the StdHeap implementation if we did not preallocate the queue but we call
-// Init only once.
-func BenchmarkStdlib_Push200_EmptyInit(b *testing.B) {
-	h := new(StdHeap)
-	b.ResetTimer()
-	b.ReportAllocs()
-
-	for i := 0; i < b.N; i++ {
-		for id := uint32(0); id < 200; id++ {
-			h.Push(&prioqueue.Item{
-				ID:   id,
-				Prio: randValues[id],
-			})
-		}
-		heap.Init(h)
-	}
-}
-
-// BenchmarkStdlib_Push200_PreallocateInit tests how fast we can push 200
-// elements on the StdHeap implementation if we preallocate the queue and
-// call Init only once.
-func BenchmarkStdlib_Push200_PreallocateInit(b *testing.B) {
-	h := make(StdHeap, 0, 200)
-	b.ResetTimer()
-	b.ReportAllocs()
-
-	for i := 0; i < b.N; i++ {
-		for id := uint32(0); id < 200; id++ {
-			h.Push(&prioqueue.Item{
-				ID:   id,
-				Prio: randValues[id],
-			})
-		}
-		heap.Init(&h)
-	}
-}
-
 // BenchmarkStdlibHeap_Pop tests how fast a single pop operation of the StdHeap
 // implementation is when operating on 100,000 random elements.
 func BenchmarkStdlibHeap_Pop(b *testing.B) {
