@@ -12,14 +12,15 @@ var randValues []float32
 
 func init() {
 	rng := rand.New(rand.NewSource(42))
-	randValues = make([]float32, 100_000)
+	randValues = make([]float32, 200)
 	for i := range randValues {
 		randValues[i] = rng.Float32()
 	}
 }
 
 // BenchmarkMaxHeap_Push1_Empty tests how fast a single push operation is if the
-// queue is not preallocated.
+// queue is not preallocated and with each iteration of this benchmark the queue
+// is growing.
 func BenchmarkMaxHeap_Push1_Empty(b *testing.B) {
 	rand.Seed(42)
 	values := make([]float32, b.N)
@@ -39,7 +40,8 @@ func BenchmarkMaxHeap_Push1_Empty(b *testing.B) {
 }
 
 // BenchmarkMaxHeap_Push1_Preallocate tests how fast a single push operation is
-// if the queue is preallocated.
+// if the queue is preallocated and with each iteration of this benchmark the
+// queue is growing.
 func BenchmarkMaxHeap_Push1_Preallocate(b *testing.B) {
 	rand.Seed(42)
 	values := make([]float32, b.N)
@@ -69,6 +71,10 @@ func BenchmarkMaxHeap_Push200_Empty(b *testing.B) {
 		for id := uint32(0); id < 200; id++ {
 			h.Push(id, randValues[id])
 		}
+
+		b.StopTimer()
+		h = new(prioqueue.MaxHeap)
+		b.StartTimer()
 	}
 }
 
@@ -83,26 +89,38 @@ func BenchmarkMaxHeap_Push200_Preallocate(b *testing.B) {
 		for id := uint32(0); id < 200; id++ {
 			h.Push(id, randValues[id])
 		}
+
+		b.StopTimer()
+		h = prioqueue.NewMaxHeap(200)
+		b.StartTimer()
 	}
 }
 
-// BenchmarkMaxHeap_Pop tests how fast a single pop operation of the MaxHeap
-// implementation is when operating on 100,000 random elements.
-func BenchmarkMaxHeap_Pop(b *testing.B) {
+// BenchmarkMaxHeap_Pop200 tests how long it takes to pop all elements from a
+// MaxHeap implementation which contains 200 random elements.
+func BenchmarkMaxHeap_Pop200(b *testing.B) {
 	pq := prioqueue.NewMaxHeap(len(randValues))
-	for i := 0; i < len(randValues); i++ {
-		pq.Push(uint32(i), randValues[i])
-	}
 
-	b.ResetTimer()
 	b.ReportAllocs()
-	for pq.Len() > 0 {
-		pq.Pop()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+
+		b.StopTimer()
+		for i := 0; i < len(randValues); i++ {
+			pq.Push(uint32(i), randValues[i])
+		}
+		b.StartTimer()
+
+		for pq.Len() > 0 {
+			pq.Pop()
+		}
 	}
 }
 
 // BenchmarkStdlib_Push1_Empty tests how fast a single push operation is if the
-// queue is not preallocated.
+// queue is not preallocated and with each iteration of this benchmark the queue
+// is growing.
 func BenchmarkStdlib_Push1_Empty(b *testing.B) {
 	rng := rand.New(rand.NewSource(42))
 	values := make([]float32, b.N)
@@ -123,7 +141,8 @@ func BenchmarkStdlib_Push1_Empty(b *testing.B) {
 }
 
 // BenchmarkStdlib_Push1_Preallocate tests how fast a single push operation is
-// if the queue is preallocated.
+// if the queue is preallocated and with each iteration of this benchmark the
+// queue is growing.
 func BenchmarkStdlib_Push1_Preallocate(b *testing.B) {
 	rng := rand.New(rand.NewSource(42))
 	values := make([]float32, b.N)
@@ -157,6 +176,10 @@ func BenchmarkStdlib_Push200_Empty(b *testing.B) {
 				Prio: randValues[id],
 			})
 		}
+
+		b.StopTimer()
+		h = new(StdHeap)
+		b.StartTimer()
 	}
 }
 
@@ -174,21 +197,32 @@ func BenchmarkStdlib_Push200_Preallocate(b *testing.B) {
 				Prio: randValues[id],
 			})
 		}
+
+		b.StopTimer()
+		h = make(StdHeap, 0, 200)
+		b.StartTimer()
 	}
 }
 
-// BenchmarkStdlibHeap_Pop tests how fast a single pop operation of the StdHeap
-// implementation is when operating on 100,000 random elements.
-func BenchmarkStdlibHeap_Pop(b *testing.B) {
+// BenchmarkStdlibHeap_Pop200 tests how long it takes to pop all elements from a
+// StdHeap implementation which contains 200 random elements.
+func BenchmarkStdlibHeap_Pop200(b *testing.B) {
 	h := make(StdHeap, 0, len(randValues))
-	for i := 0; i < len(randValues); i++ {
-		item := &prioqueue.Item{ID: uint32(i), Prio: randValues[i]}
-		heap.Push(&h, item)
-	}
 
-	b.ResetTimer()
 	b.ReportAllocs()
-	for h.Len() > 0 {
-		heap.Pop(&h)
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+
+		b.StopTimer()
+		for i := 0; i < len(randValues); i++ {
+			item := &prioqueue.Item{ID: uint32(i), Prio: randValues[i]}
+			heap.Push(&h, item)
+		}
+		b.StartTimer()
+
+		for h.Len() > 0 {
+			heap.Pop(&h)
+		}
 	}
 }

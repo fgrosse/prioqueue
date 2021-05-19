@@ -65,23 +65,39 @@ This package provides a couple of benchmarks to understand the performance of
 the implementation. In order to compare it with a baseline, there is also a
 benchmark which uses the `container/heap` package from the standard library.
 
-We can see that `github.com/fgrosse/prioqueue` has a slight edge over the
-`container/heap` implementation when popping elements (`*Pop`), when pushing to
-an empty queue (`*Empty`) or when pushing to a previously known amount of
-elements onto the queue (`PushPreallocate`).
+There are three different benchmarks that test the performance of the standard
+library implementation (`BenchmarkStdlib*`) and this package (`BenchmarkMaxHeap*`).
+
+The `*Push1*` benchmarks pushing a single element onto the queue and with each
+iteration of this benchmark the queue is growing. The `*Push200*` benchmarks
+test how long it takes to push exactly 200 elements. Having a benchmark with a
+fixed amount of elements to push (and thus a fixed size for the resulting queue)
+is useful because it shows performance of a smaller queue (i.e. only 200 elements).
+In contrast, the `*Push1*` benchmarks show performance with queues which contain
+millions of elements. The `*Empty` vs `*Preallocate` variants test performance
+when the corresponding queue is not sized in advance (i.e. "Empty") vs allocating
+the memory for the queue in advance (i.e. "Preallocate").
+
+Finally, the `*Pop200*` benchmarks test how long it takes to pop all elements
+from a queue which contains out of 200 elements.
 
 ```shell
-$ go test -run=None -bench 'Std|Max'
+$ go test -bench .
 goos: linux
 goarch: amd64
 pkg: github.com/fgrosse/prioqueue
 cpu: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz
-BenchmarkMaxHeap_PushEmpty-8         	12004537	        99.03 ns/op	      52 B/op	       1 allocs/op
-BenchmarkMaxHeap_PushPreallocate-8   	33739531	        34.71 ns/op	       8 B/op	       1 allocs/op
-BenchmarkMaxHeap_Pop-8               	 2418582	       804.6 ns/op	       0 B/op	       0 allocs/op
-BenchmarkStdlib_PushEmpty-8          	11076016	       119.4 ns/op	      55 B/op	       1 allocs/op
-BenchmarkStdlib_PushPreallocate-8    	20723624	        54.81 ns/op	       8 B/op	       1 allocs/op
-BenchmarkStdlibHeap_Pop-8            	 1547786	      1084 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMaxHeap_Push1_Empty-8                  11827210      93.54 ns/op        52 B/op        1 allocs/op
+BenchmarkMaxHeap_Push1_Preallocate-8            30413618      37.83 ns/op         8 B/op        1 allocs/op
+BenchmarkMaxHeap_Push200_Empty-8                  140348       8185 ns/op      5688 B/op      209 allocs/op
+BenchmarkMaxHeap_Push200_Preallocate-8            223698       5389 ns/op      1600 B/op      200 allocs/op
+BenchmarkMaxHeap_Pop200-8                         193807       6115 ns/op         0 B/op        0 allocs/op
+
+BenchmarkStdlib_Push1_Empty-8                   10242606      98.41 ns/op        49 B/op        1 allocs/op
+BenchmarkStdlib_Push1_Preallocate-8             21231261      50.39 ns/op         8 B/op        1 allocs/op
+BenchmarkStdlib_Push200_Empty-8                    97664      12617 ns/op      5688 B/op      209 allocs/op
+BenchmarkStdlib_Push200_Preallocate-8             117884       9834 ns/op      1600 B/op      200 allocs/op
+BenchmarkStdlibHeap_Pop200-8                       59112      20256 ns/op         0 B/op        0 allocs/op
 PASS
-ok  	github.com/fgrosse/prioqueue	14.390s
+ok      github.com/fgrosse/prioqueue    30.705s
 ```
