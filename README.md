@@ -87,17 +87,17 @@ goos: linux
 goarch: amd64
 pkg: github.com/fgrosse/prioqueue
 cpu: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz
-BenchmarkMaxHeap_Push1_Empty-8                  11827210      93.54 ns/op        52 B/op        1 allocs/op
-BenchmarkMaxHeap_Push1_Preallocate-8            30413618      37.83 ns/op         8 B/op        1 allocs/op
-BenchmarkMaxHeap_Push200_Empty-8                  140348       8185 ns/op      5688 B/op      209 allocs/op
-BenchmarkMaxHeap_Push200_Preallocate-8            223698       5389 ns/op      1600 B/op      200 allocs/op
-BenchmarkMaxHeap_Pop200-8                         193807       6115 ns/op         0 B/op        0 allocs/op
+BenchmarkMaxHeap_Push1_Empty-8               11827210     93.54 ns/op       52 B/op       1 allocs/op
+BenchmarkMaxHeap_Push1_Preallocate-8         30413618     37.83 ns/op        8 B/op       1 allocs/op
+BenchmarkMaxHeap_Push200_Empty-8               140348      8185 ns/op     5688 B/op     209 allocs/op
+BenchmarkMaxHeap_Push200_Preallocate-8         223698      5389 ns/op     1600 B/op     200 allocs/op
+BenchmarkMaxHeap_Pop200-8                      193807      6115 ns/op        0 B/op       0 allocs/op
 
-BenchmarkStdlib_Push1_Empty-8                   10242606      98.41 ns/op        49 B/op        1 allocs/op
-BenchmarkStdlib_Push1_Preallocate-8             21231261      50.39 ns/op         8 B/op        1 allocs/op
-BenchmarkStdlib_Push200_Empty-8                    97664      12617 ns/op      5688 B/op      209 allocs/op
-BenchmarkStdlib_Push200_Preallocate-8             117884       9834 ns/op      1600 B/op      200 allocs/op
-BenchmarkStdlibHeap_Pop200-8                       59112      20256 ns/op         0 B/op        0 allocs/op
+BenchmarkStdlib_Push1_Empty-8                10242606     98.41 ns/op       49 B/op       1 allocs/op
+BenchmarkStdlib_Push1_Preallocate-8          21231261     50.39 ns/op        8 B/op       1 allocs/op
+BenchmarkStdlib_Push200_Empty-8                 97664     12617 ns/op     5688 B/op     209 allocs/op
+BenchmarkStdlib_Push200_Preallocate-8          117884      9834 ns/op     1600 B/op     200 allocs/op
+BenchmarkStdlibHeap_Pop200-8                    59112     20256 ns/op        0 B/op       0 allocs/op
 PASS
 ok      github.com/fgrosse/prioqueue    30.705s
 ```
