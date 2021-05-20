@@ -1,4 +1,15 @@
-# Go Priority Queue
+<h1 align="center">Go Priority Queue 🚥</h1>
+<p align="center">An efficient min and max priority queue using a binary heap encoded in an array.</p>
+<p align="center">
+   <a href="https://github.com/fgrosse/prioqueue/releases"><img src="https://img.shields.io/github/tag/fgrosse/prioqueue.svg?label=version&color=brightgreen"></a>
+   <!-- <a href="https://circleci.com/gh/fgrosse/prioqueue/tree/master"><img src="https://circleci.com/gh/fgrosse/prioqueue/tree/master.svg?style=shield"></a> -->
+    <a href="https://goreportcard.com/report/github.com/fgrosse/prioqueue"><img src="https://goreportcard.com/badge/github.com/fgrosse/prioqueue"></a>
+   <!-- <a href="https://codecov.io/gh/fgrosse/prioqueue"><img src="https://codecov.io/gh/fgrosse/prioqueue/branch/master/graph/badge.svg"/></a> -->
+    <a href="https://pkg.go.dev/github.com/fgrosse/prioqueue"><img src="https://img.shields.io/badge/godoc-reference-blue.svg?color=blue"></a>
+    <a href="https://github.com/fgrosse/prioqueue/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-BSD--3--Clause-blue.svg"></a>
+</p>
+
+---
 
 Package `prioqueue` implements an efficient min and max priority queue using a
 binary heap encoded in a slice.   
