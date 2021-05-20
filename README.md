@@ -3,7 +3,7 @@
 <p align="center">
    <a href="https://github.com/fgrosse/prioqueue/releases"><img src="https://img.shields.io/github/tag/fgrosse/prioqueue.svg?label=version&color=brightgreen"></a>
    <a href="https://github.com/fgrosse/prioqueue/actions/workflows/test.yml"><img src="https://github.com/fgrosse/prioqueue/actions/workflows/test.yml/badge.svg"></a>
-    <a href="https://goreportcard.com/report/github.com/fgrosse/prioqueue"><img src="https://goreportcard.com/badge/github.com/fgrosse/prioqueue"></a>
+   <a href="https://goreportcard.com/report/github.com/fgrosse/prioqueue"><img src="https://goreportcard.com/badge/github.com/fgrosse/prioqueue"></a>
    <!-- <a href="https://codecov.io/gh/fgrosse/prioqueue"><img src="https://codecov.io/gh/fgrosse/prioqueue/branch/master/graph/badge.svg"/></a> -->
     <a href="https://pkg.go.dev/github.com/fgrosse/prioqueue"><img src="https://img.shields.io/badge/godoc-reference-blue.svg?color=blue"></a>
     <a href="https://github.com/fgrosse/prioqueue/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-BSD--3--Clause-blue.svg"></a>
@@ -28,13 +28,14 @@ import (
 )
 
 func Example() {
-	// n is the amount of elements we are about to push. If you don't know this
-	// amount in advance then you can set n to 0 or a negative number. In this
-	// case the slice uses by the queue will start with the default slice
+	// The queue will be backed by a slice and knowing its size ahead of time
+	// avoids unnecessary allocations. If you don't know how many items in
+	// advance then you can set n to 0 or a negative number instead. In this
+	// case the slice used by the queue will start with the default slice
 	// capacity of Go.
 	n := 10
 
-	// We use a random number generator in this example to generate priority values.
+	// We use a random number generator in this example to generate values.
 	rng := rand.New(rand.NewSource(42))
 
 	q := prioqueue.NewMaxHeap(n)
@@ -67,8 +68,6 @@ func Example() {
 ```
 
 ## TODO: describe how it works
-
-## TODO: explain why this is faster than the stdlib
 
 ## Benchmarks
 

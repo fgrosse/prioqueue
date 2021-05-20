@@ -8,13 +8,14 @@ import (
 )
 
 func Example() {
-	// n is the amount of elements we are about to push. If you don't know this
-	// amount in advance then you can set n to 0 or a negative number. In this
-	// case the slice uses by the queue will start with the default slice
+	// The queue will be backed by a slice and knowing its size ahead of time
+	// avoids unnecessary allocations. If you don't know how many items in
+	// advance then you can set n to 0 or a negative number instead. In this
+	// case the slice used by the queue will start with the default slice
 	// capacity of Go.
 	n := 10
 
-	// We use a random number generator in this example to generate priority values.
+	// We use a random number generator in this example to generate values.
 	rng := rand.New(rand.NewSource(42))
 
 	q := prioqueue.NewMaxHeap(n)
