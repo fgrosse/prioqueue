@@ -29,10 +29,10 @@ import (
 
 func Example() {
 	// The queue will be backed by a slice and knowing its size ahead of time
-	// avoids unnecessary allocations. If you don't know how many items in
-	// advance then you can set n to 0 or a negative number instead. In this
-	// case the slice used by the queue will start with the default slice
-	// capacity of Go.
+	// avoids unnecessary allocations. If you don't know in advance how many
+	// items you want to push then you can set n to 0 or a negative number
+	// instead. In this case the slice used by the queue will start with the
+	// default slice capacity of Go.
 	n := 10
 
 	// We use a random number generator in this example to generate values.
@@ -67,7 +67,11 @@ func Example() {
 }
 ```
 
-## TODO: describe how it works
+## How it works
+
+![Heap](heap.png)
+
+TODO
 
 ## Benchmarks
 
