@@ -69,9 +69,38 @@ func Example() {
 
 ## How it works
 
-![Heap](heap.png)
+One way to implement a priority queue is by using a _binary heap_. Such a heap
+can be visualized as a binary tree in which each node's value is smaller than
+the values of its children ("Min Heap"). Alternatively the value can be _greater_
+than all of its children ("Max Heap") as long as this property is applied
+consistently upon the tree. For the remaining description we will assume a _Min_
+heap.
 
-TODO
+Now to get the smallest value we can get it in constant time from the root of
+the tree. To add a new value (aka "push") we append it to one of the leaves of
+the tree and then "bubble" it up by swapping the inserted node with its
+parent until the heap property is satisfied again. Since we have a binary tree
+all the time, the time complexity of insertion is logarithmic. Removing the
+minimum element (aka "pop") can also be done in logarithmic time. To do this we
+remove the root node and replace it with one of the leave nodes. We then swap
+the new root node down until the heap property is satisfied again (i.e. all
+nodes must have smaller values than their children). 
+
+Such a binary tree can be encoded into an _array_ where the root node is the
+first element. We then write all children on the same level one after another
+to the array until it contains all _n_ nodes of tree. With this schema, the
+parent of node _i_ will be at index _(i-1)/2_, and the children of _i_ are found
+at indices _(2*i)+1_ and _(2*i)+2_ respectively.
+
+The nice thing about encoding this in an array is that it is very space efficient
+without sacrificing any speed. Especially in Go, we can leverage the concept of
+slices, for instance by pre allocating the underlying array and re-slicing it
+when pushing and popping element. That is also what the standard library is doing
+in the `container/heap` implementation. However, the implementation here appears
+to be slightly faster, probably because it is working on a concrete scalar data
+type directly (i.e. `float32`) instead of having to go through an interface.
+
+![Heap](heap.png)
 
 ## Benchmarks
 
