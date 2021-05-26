@@ -1,0 +1,25 @@
+package prioqueue
+
+import (
+	"testing"
+)
+
+func TestMinHeap(t *testing.T) {
+	var pq MinHeap[float32]
+	runTests(t, &pq, assertSmallestFirst)
+
+	pq2 := NewMinHeap[float32](10)
+	runTests(t, pq2, assertSmallestFirst)
+}
+
+func TestMinHeap_Random(t *testing.T) {
+	pq := NewMinHeap[float32](10)
+	runTestsN(t, pq, assertSmallestFirst, 10_000)
+}
+
+func TestInference(t *testing.T) {
+	i := NewItem(123, 4.5)
+
+
+	t.Log(i)
+}

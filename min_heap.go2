@@ -1,14 +1,12 @@
-// Package prioqueue implements an efficient min and max priority queue using a
-// binary heap encoded in a slice.
 package prioqueue
 
-// MaxHeap implements a priority queue which allows to retrieve the highest
+// MinHeap implements a priority queue which allows to retrieve the lowest
 // priority element using a heap. Since the heap is maintained in form of a
 // binary tree, it can efficiently be represented in the form of a list.
 //
 // The priority queue has the following properties:
-//   - items with high priority are dequeued before elements with lower priority
-//   - the item at the root of the tree is the maximum among all items present
+//   - items with low priority are dequeued before elements with higher priority
+//   - the item at the root of the tree is the minimum among all items present
 //     in the binary heap. The same property is recursively true for all nodes
 //     in the tree.
 //
@@ -24,28 +22,47 @@ package prioqueue
 // Time Complexity
 //
 //   Push and Pop take O(log n) and Top() happens in constant time.
-type MaxHeap struct {
-	items []*Item
+type MinHeap[T Numeric] struct {
+	items []*Item[T]
 }
 
-// NewMaxHeap returns a new MaxHeap instance which contains a pre-allocated
+type Numeric interface {
+	type int, int8, int16, int32, int64,
+		uint, uint8, uint16, uint32, uint64,
+		float32, float64
+}
+
+// Item is an element in a priority queue.
+type Item[T Numeric] struct {
+	ID   uint32
+	Prio T
+}
+
+func NewItem[T Numeric](id uint32, prio T) *Item[T] {
+	return &Item[T]{
+		ID: id,
+		Prio: prio,
+	}
+}
+
+// NewMinHeap returns a new MinHeap instance which contains a pre-allocated
 // backing array for the stored items. Usage of this function or setting a
 // correct size is optional. If more items are inserted into the queue than
 // there is space in the backing array, it grows automatically.
 //
 // If you do not know the size in advance you can set the argument to 0 or a
 // negative value.
-func NewMaxHeap(size int) *MaxHeap {
-	h := new(MaxHeap)
+func NewMinHeap[T Numeric](size int) *MinHeap[T] {
+	h := new(MinHeap[T])
 	if size > 0 {
-		h.items = make([]*Item, 0, size)
+		h.items = make([]*Item[T], 0, size)
 	}
 	return h
 }
 
-// Top returns the ID and priority of the item with the highest priority value
-// in the queue without removing it.
-func (h *MaxHeap) Top() (uint32, float32) {
+// Top returns the ID and priority of the item with the lowest priority value in
+// the queue without removing it.
+func (h *MinHeap[T]) Top() (id uint32, prio T) {
 	i := h.TopItem()
 	if i == nil {
 		return 0, 0
@@ -54,9 +71,9 @@ func (h *MaxHeap) Top() (uint32, float32) {
 	return i.ID, i.Prio
 }
 
-// TopItem returns the item with the highest priority value in the queue without
+// TopItem returns the item with the lowest priority value in the queue without
 // removing it.
-func (h *MaxHeap) TopItem() *Item {
+func (h *MinHeap[T]) TopItem() *Item[T] {
 	if len(h.items) == 0 {
 		return nil
 	}
@@ -64,7 +81,7 @@ func (h *MaxHeap) TopItem() *Item {
 }
 
 // Len returns the amount of elements in the queue.
-func (h *MaxHeap) Len() int {
+func (h *MinHeap[T]) Len() int {
 	return len(h.items)
 }
 
@@ -72,18 +89,18 @@ func (h *MaxHeap) Len() int {
 // still be used by the heap which means that this function will not free up any
 // memory. If you need to release memory, you have to create a new instance and
 // let this one be taken care of by the garbage collection.
-func (h *MaxHeap) Reset() {
+func (h *MinHeap[T]) Reset() {
 	h.items = h.items[0:0]
 }
 
 // Push the value item into the priority queue with provided priority.
-func (h *MaxHeap) Push(id uint32, prio float32) {
-	item := &Item{ID: id, Prio: prio}
+func (h *MinHeap[T]) Push(id uint32, priority T) {
+	item := NewItem(id, priority)
 	h.PushItem(item)
 }
 
 // PushItem adds an Item to the queue.
-func (h *MaxHeap) PushItem(item *Item) {
+func (h *MinHeap[T]) PushItem(item *Item[T]) {
 	// Add new item to the end of the list and then let it bubble up the binary
 	// tree until the heap property is restored.
 	h.items = append(h.items, item)
@@ -91,7 +108,7 @@ func (h *MaxHeap) PushItem(item *Item) {
 	i := len(h.items) - 1 // start at the last element
 	for i > 0 {
 		parent := (i - 1) / 2
-		if h.items[parent].Prio >= h.items[i].Prio {
+		if h.items[parent].Prio <= h.items[i].Prio {
 			// heap property is now satisfied again
 			return
 		}
@@ -101,14 +118,14 @@ func (h *MaxHeap) PushItem(item *Item) {
 	}
 }
 
-// Pop removes the item with the highest priority value from the queue and
+// Pop removes the item with the lowest priority value from the queue and
 // returns its ID and priority.
 //
 // Note that while popping an element from the heap will also remove it from the
 // queue but it will not release the memory in the backing array as long as the
 // heap is still in use.
 // See https://blog.golang.org/slices-intro#TOC_6.
-func (h *MaxHeap) Pop() (id uint32, priority float32) {
+func (h *MinHeap[T]) Pop() (id uint32, priority T) {
 	i := h.PopItem()
 	if i == nil {
 		return 0, 0
@@ -117,8 +134,8 @@ func (h *MaxHeap) Pop() (id uint32, priority float32) {
 	return i.ID, i.Prio
 }
 
-// PopItem removes the item with the highest priority value from the queue.
-func (h *MaxHeap) PopItem() *Item {
+// PopItem removes the item with the lowest priority value from the queue.
+func (h *MinHeap[T]) PopItem() *Item[T] {
 	if len(h.items) == 0 {
 		return nil
 	}
@@ -126,7 +143,7 @@ func (h *MaxHeap) PopItem() *Item {
 	root := h.items[0]
 	maxIndex := len(h.items) - 1
 
-	// swap first and last element and then remove the last from the list
+	// swap first and last element
 	h.items[0], h.items[maxIndex] = h.items[maxIndex], h.items[0]
 	h.items = h.items[0:maxIndex]
 
@@ -138,7 +155,7 @@ func (h *MaxHeap) PopItem() *Item {
 
 // shiftDown restores the heap property by shifting down the root node in the binary
 // tree until the heap property is satisfied.
-func (h *MaxHeap) shiftDown() {
+func (h *MinHeap[T]) shiftDown() {
 	maxIndex := len(h.items) - 1
 	i := 0 // start at the root node
 	for {
@@ -148,11 +165,11 @@ func (h *MaxHeap) shiftDown() {
 			break // item i has no children
 		}
 
-		if j < maxIndex && h.items[j].Prio < h.items[j+1].Prio {
+		if j < maxIndex && h.items[j].Prio > h.items[j+1].Prio {
 			j++
 		}
 
-		if h.items[i].Prio >= h.items[j].Prio {
+		if h.items[i].Prio <= h.items[j].Prio {
 			// heap property is now satisfied again
 			break
 		}
