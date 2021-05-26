@@ -14,6 +14,31 @@
 Package `prioqueue` implements an efficient min and max priority queue using a
 binary heap encoded in a slice.   
 
+## You are on the generics experimental branch
+
+This branch contains only the `MinHeap` implementation and no benchmarks.
+The purpose of this branch is to try out how [Go Generics][1] would look
+and feel like when they land in Go 1.18 (?).
+
+All `*.go` files on this branch are generated from the corresponding `*.go2`
+files. To run the generator, you first need to checkout and compile the
+`dev.go2go` branch of the Go source code. Instructions on how this can be done
+can be found at [the Go blog][2] as well as the [Jetbrains blog][3].
+
+Afterwards you can run the following on this repository:
+
+```shell
+go tool go2go build
+```
+
+This tool will type check the code to test if it is compliant with the Go generics
+proposal. You can also run the resulting generated code but this is not meant for
+production usage.
+
+[1]: https://go.googlesource.com/proposal/+/refs/heads/master/design/43651-type-parameters.md
+[2]: https://blog.golang.org/generics-next-step
+[3]: https://blog.jetbrains.com/go/2020/11/24/experimenting-with-go-type-parameters-generics-in-goland/
+
 ## Example usage
 
 [embedmd]:# (example_test.go)
