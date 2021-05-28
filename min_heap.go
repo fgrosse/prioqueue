@@ -80,6 +80,13 @@ func (h *MinHeap) Reset() {
 	h.items = h.items[0:0]
 }
 
+// Items returns all elements that are currently in the queue.
+// The caller should ignore the order in which elements are returned since this
+// only reflects how the queue stores its items internally.
+func (h *MinHeap) Items() []*Item {
+	return h.items
+}
+
 // PopAndPush removes the item with the lowest priority value and adds a new
 // value to the heap in one operation. This is faster than two separate calls
 // to Pop and Push.

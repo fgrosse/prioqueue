@@ -16,6 +16,7 @@ type PriorityQueue interface {
 	Pop() (id uint32, priority float32)
 	PopAndPush(*prioqueue.Item)
 	Reset()
+	Items() []*prioqueue.Item
 }
 
 type orderFunc func(current, last float32) bool
@@ -55,6 +56,11 @@ func runTests(t *testing.T, pq PriorityQueue, checkOrder orderFunc) {
 
 	pq.PopAndPush(&prioqueue.Item{ID: 11, Prio: 55})
 	require.Equal(t, 10, pq.Len())
+
+	t.Log("Item in array:")
+	for _, item := range pq.Items() {
+		t.Logf(" - id: %2.d prio: %3.0f", item.ID, item.Prio)
+	}
 
 	var last float32
 	for pq.Len() > 0 {
