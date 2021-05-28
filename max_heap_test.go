@@ -9,7 +9,9 @@ import (
 func TestMaxHeap(t *testing.T) {
 	var pq prioqueue.MaxHeap
 	runTests(t, &pq, assertBiggestFirst)
+}
 
+func TestNewMaxHeap(t *testing.T) {
 	pq2 := prioqueue.NewMaxHeap(10)
 	runTests(t, pq2, assertBiggestFirst)
 }

@@ -9,7 +9,9 @@ import (
 func TestMinHeap(t *testing.T) {
 	var pq prioqueue.MinHeap
 	runTests(t, &pq, assertSmallestFirst)
+}
 
+func TestNewMinHeap(t *testing.T) {
 	pq2 := prioqueue.NewMinHeap(10)
 	runTests(t, pq2, assertSmallestFirst)
 }

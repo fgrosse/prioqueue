@@ -14,6 +14,7 @@ type PriorityQueue interface {
 	Len() int
 	Top() (id uint32, priority float32)
 	Pop() (id uint32, priority float32)
+	PopAndPush(*prioqueue.Item)
 	Reset()
 }
 
@@ -52,10 +53,14 @@ func runTests(t *testing.T, pq PriorityQueue, checkOrder orderFunc) {
 
 	require.Equal(t, 10, pq.Len())
 
+	pq.PopAndPush(&prioqueue.Item{ID: 11, Prio: 55})
+	require.Equal(t, 10, pq.Len())
+
 	var last float32
 	for pq.Len() > 0 {
 		topID, topPrio := pq.Top()
 		poppedID, poppedPrio := pq.Pop()
+		t.Logf("Popped item %d: %.0f", poppedID, poppedPrio)
 		assert.Equal(t, topID, poppedID)
 		assert.Equal(t, topPrio, poppedPrio)
 		if last != 0 && !checkOrder(poppedPrio, last) {

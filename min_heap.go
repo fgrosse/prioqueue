@@ -80,6 +80,14 @@ func (h *MinHeap) Reset() {
 	h.items = h.items[0:0]
 }
 
+// PopAndPush removes the item with the lowest priority value and adds a new
+// value to the heap in one operation. This is faster than two separate calls
+// to Pop and Push.
+func (h *MinHeap) PopAndPush(item *Item) {
+	h.items[0] = item
+	h.shiftDown()
+}
+
 // Push the value item into the priority queue with provided priority.
 func (h *MinHeap) Push(id uint32, priority float32) {
 	item := &Item{ID: id, Prio: priority}
