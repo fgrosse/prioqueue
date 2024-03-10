@@ -1,6 +1,6 @@
 name: CI
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   unit_tests:
@@ -27,7 +27,6 @@ jobs:
   code_coverage:
     name: "Code coverage report"
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
     needs: unit_tests
     env:
       GH_TOKEN: ${{ github.token }}
