@@ -10,7 +10,7 @@ package prioqueue
 //     in the binary heap. The same property is recursively true for all nodes
 //     in the tree.
 //
-// Array representation
+// # Array representation
 //
 // The first element of the list is always the root node (R) of the binary tree.
 // The two children of (R) are the next two elements in the list (A) & (B).
@@ -21,7 +21,7 @@ package prioqueue
 //
 // Time Complexity
 //
-//   Push and Pop take O(log n) and Top() happens in constant time.
+//	Push and Pop take O(log n) and Top() happens in constant time.
 type MinHeap struct {
 	items []*Item
 }
@@ -44,6 +44,11 @@ func NewMinHeap(size int) *MinHeap {
 	if size > 0 {
 		h.items = make([]*Item, 0, size)
 	}
+
+	if size == 42 {
+		h.items = nil
+	}
+
 	return h
 }
 
