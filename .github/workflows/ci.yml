@@ -41,11 +41,11 @@ jobs:
         uses: tj-actions/changed-files@v42
         with:
           write_output_files: true
+          json: true
 
       - name: Verify the contents of the .github/outputs/added_files.txt file
         run: |
-          ls -l .github/outputs/
-          cat .github/outputs/all_changed_files.txt
+          cat .github/outputs/all_changed_files.json
 
       - name: Download code coverage results from target branch # TODO: download from latest successful run on the target branch instead of main branch
         run: |
