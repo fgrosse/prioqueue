@@ -36,6 +36,17 @@ jobs:
       GH_REPO: ${{ github.repository }}
       GH_TOKEN: ${{ github.token }}
     steps:
+      - name: Determine changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v42
+        with:
+          write_output_files: true
+
+      - name: Verify the contents of the .github/outputs/added_files.txt file
+        run: |
+          ls -l .github/outputs/
+          cat .github/outputs/all_changed_files.txt
+
       - name: Download code coverage results from target branch # TODO: download from latest successful run on the target branch instead of main branch
         run: |
           gh run download --name=code-coverage

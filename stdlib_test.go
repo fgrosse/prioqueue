@@ -5,8 +5,9 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/fgrosse/prioqueue"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/fgrosse/prioqueue"
 )
 
 // StdHeap is the heap implementation using the container/heap package to
@@ -39,7 +40,7 @@ func (h *StdHeap) Pop() interface{} {
 
 func TestStdHeap(t *testing.T) {
 	q := new(StdHeap)
-	n := 10_000
+	n := 10_001
 
 	rng := rand.New(rand.NewSource(42))
 	for i := 0; i < n; i++ {
