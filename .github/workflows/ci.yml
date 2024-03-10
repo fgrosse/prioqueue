@@ -42,6 +42,11 @@ jobs:
         with:
           write_output_files: true
           json: true
+          files: |
+            **.go
+          files_ignore: |
+            **_test.go
+            vendor/**
 
       - name: Verify the contents of the .github/outputs/added_files.txt file
         run: |
