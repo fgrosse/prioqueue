@@ -37,7 +37,11 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
       - name: Install go-coverage-report
-        run: go install github.com/fgrosse/go-coverage-report@v0.1.0
+        run: |
+          go env
+          go install github.com/fgrosse/go-coverage-report@v0.1.0
+          ls -l $HOME/go/bin
+          ls -l $GOPATH/bin
 
       - name: Determine changed files
         id: changed-files
