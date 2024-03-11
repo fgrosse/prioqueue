@@ -36,12 +36,15 @@ jobs:
       GH_REPO: ${{ github.repository }}
       GH_TOKEN: ${{ github.token }}
     steps:
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ^1.22
+
       - name: Install go-coverage-report
         run: |
-          go env
           go install github.com/fgrosse/go-coverage-report@v0.1.0
-          ls -l $HOME/go/bin
-          ls -l $GOPATH/bin
+          which go-coverage-report
 
       - name: Determine changed files
         id: changed-files
