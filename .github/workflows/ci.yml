@@ -62,10 +62,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: code-coverage
+          path: .github/outputs
 
       - name: Rename code coverage results file from current run
         run: |
-          mv coverage.txt new-coverage.txt
+          mv .github/outputs/coverage.txt .github/outputs/new-coverage.txt
 
       - name: Determine last successful run on the target branch
         run: |
@@ -73,19 +74,21 @@ jobs:
           if [ -z "$LAST_SUCCESSFUL_RUN_ID" ]; then
             echo "No successful run found on the target branch"
             exit 1
+          else
+            echo "Last successful run on the target branch: $LAST_SUCCESSFUL_RUN_ID"
           fi
 
       - name: Download code coverage results from target branch
         run: |
-          gh run download $LAST_SUCCESSFUL_RUN_ID --name=code-coverage
-          mv coverage.txt old-coverage.txt
+          gh run download $LAST_SUCCESSFUL_RUN_ID --name=code-coverage --dir=.github/outputs
+          mv .github/outputs/coverage.txt .github/outputs/old-coverage.txt
 
       - name: Compare code coverage results
         run: |
           go-coverage-report \
             -prefix=github.com/fgrosse/prioqueue \
-            old-coverage.txt \
-            new-coverage.txt \
+            .github/outputs/old-coverage.txt \
+            .github/outputs/new-coverage.txt \
             .github/outputs/all_changed_files.json \
           > coverage-comment.md
 
