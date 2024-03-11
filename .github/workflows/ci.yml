@@ -93,4 +93,10 @@ jobs:
           > coverage-comment.md
 
       - name: Comment on pull request
-        run: gh pr comment ${{ github.event.number }} --body-file=coverage-comment.md
+        run: |
+          COMMENT_ID=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments -q '.[] | select(.user.login=="github-actions[bot]") | .id' | head -n 1)
+          if [ -z "$COMMENT_ID" ]; then
+            gh pr comment ${{ github.event.number }} --body-file=coverage-comment.md
+          else
+            gh pr comment ${{ github.event.number }} --body-file=coverage-comment.md --edit-last
+          fi
