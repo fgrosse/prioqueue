@@ -58,18 +58,26 @@ jobs:
             **_test.go
             vendor/**
 
-      - name: Download code coverage results
+      - name: Download code coverage results from current run
         uses: actions/download-artifact@v4
         with:
           name: code-coverage
 
-      - name: Rename code coverage results file
+      - name: Rename code coverage results file from current run
         run: |
           mv coverage.txt new-coverage.txt
 
-      - name: Download code coverage results from target branch # TODO: download from latest successful run on the target branch instead of main branch
+      - name: Determine last successful run on the target branch
         run: |
-          gh run download --name=code-coverage
+          LAST_SUCCESSFUL_RUN_ID=$(gh run list --status=success --branch=main --workflow=CI --event=push --json=databaseId --limit=1 -q '.[] | .databaseId')
+          if [ -z "$LAST_SUCCESSFUL_RUN_ID" ]; then
+            echo "No successful run found on the target branch"
+            exit 1
+          fi
+
+      - name: Download code coverage results from target branch
+        run: |
+          gh run download $LAST_SUCCESSFUL_RUN_ID --name=code-coverage
           mv coverage.txt old-coverage.txt
 
       - name: Compare code coverage results
