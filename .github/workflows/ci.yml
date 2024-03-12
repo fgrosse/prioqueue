@@ -38,4 +38,4 @@ jobs:
       GH_REPO: ${{ github.repository }}
       GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: fgrosse/go-coverage-report@5c2c5d09139597d7037b8bd40b565a9f58987572
+      - uses: fgrosse/go-coverage-report@4e8da3a410e60eec6fb265a231b634efc19b79b2
