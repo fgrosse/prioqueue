@@ -39,3 +39,6 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: fgrosse/go-coverage-report@4e8da3a410e60eec6fb265a231b634efc19b79b2
+        with:
+          coverage-artifact-name: "code-coverage"
+          coverage-file-name: "coverage.txt"
