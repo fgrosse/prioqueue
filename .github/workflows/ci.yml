@@ -35,6 +35,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: unit_tests
     steps:
-      - uses: fgrosse/go-coverage-report@v0.4.0
+      - uses: fgrosse/go-coverage-report@v1.0.0
         with:
-          sha256sum: "33b08bab2fcedd7aec47b848b1bf9eb43b76e2b18628b36c34d4842152ce0775"
+          sha256sum: "fd199b8feed537124d09b9a02cf92dd16b8854b39af12a318f4119067ece951e"
