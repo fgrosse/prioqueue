@@ -59,9 +59,10 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
+            const coverageReport = `${{ steps.report-step.outputs.coverage_report }}`.replace(/\n/g, '\\n');
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '[Coverage Report](${{ needs.unit_tests.outputs.html-coverage-url }})\n${{ steps.report-step.outputs.coverage_report.replace('\n', '\\n') }}'
+              body: `[Coverage Report](${{ needs.unit_tests.outputs.html-coverage-url }})\n${coverageReport}`
             })
