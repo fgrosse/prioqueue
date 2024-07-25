@@ -32,7 +32,7 @@ jobs:
           path: coverage.txt
 
       - name: Convert the plaintext coverage report to HTML
-        run: go tool cover -html cover.out -o cover.html
+        run: go tool cover -html cover.txt -o cover.html
 
       - name: Upload html coverage report
         id: upload-html
