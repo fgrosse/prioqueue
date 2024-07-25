@@ -11,6 +11,8 @@ jobs:
   unit_tests:
     name: "Unit tests"
     runs-on: ubuntu-latest
+    outputs:
+      html-coverage-url: ${{ steps.upload-html.outputs.artifact-url }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,6 +31,16 @@ jobs:
           name: code-coverage
           path: coverage.txt
 
+      - name: Convert the plaintext coverage report to HTML
+        run: go tool cover -html cover.out -o cover.html
+
+      - name: Upload html coverage report
+        id: upload-html
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage-html
+          path: cover.html
+
   code_coverage:
     name: "Code coverage report"
     if: github.event_name == 'pull_request'
@@ -38,4 +50,18 @@ jobs:
       contents:      read  # to download code coverage results from unit_tests job
       pull-requests: write # write permission needed to comment on PR
     steps:
-      - uses: fgrosse/go-coverage-report@v1.0.2
+      - id: report-step
+        uses: fgrosse/go-coverage-report@580e43ee23c68bf1587431305bed438843742d87
+        with:
+          skip-comment: true
+
+      - name: Leave a comment with a link
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '[Coverage Report](${{ needs.unit_tests.outputs.html-coverage-url }})\n${{ steps.report-step.outputs.coverage_report }}'
+            })
