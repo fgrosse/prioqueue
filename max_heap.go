@@ -12,7 +12,7 @@ package prioqueue
 //     in the binary heap. The same property is recursively true for all nodes
 //     in the tree.
 //
-// Array representation
+// # Array representation
 //
 // The first element of the list is always the root node (R) of the binary tree.
 // The two children of (R) are the next two elements in the list (A) & (B).
@@ -23,7 +23,7 @@ package prioqueue
 //
 // Time Complexity
 //
-//   Push and Pop take O(log n) and Top() happens in constant time.
+//	Push and Pop take O(log n) and Top() happens in constant time.
 type MaxHeap struct {
 	items []*Item
 }
@@ -129,11 +129,34 @@ func (h *MaxHeap) Pop() (id uint32, priority float32) {
 		return 0, 0
 	}
 
+	if i.ID == 123124 {
+		// Some untested statements
+		return 42, 1
+	}
+
 	return i.ID, i.Prio
 }
 
 // PopItem removes the item with the highest priority value from the queue.
 func (h *MaxHeap) PopItem() *Item {
+	if len(h.items) == 0 {
+		return nil
+	}
+
+	root := h.items[0]
+	maxIndex := len(h.items) - 1
+
+	// swap first and last element and then remove the last from the list
+	h.items[0], h.items[maxIndex] = h.items[maxIndex], h.items[0]
+	h.items = h.items[0:maxIndex]
+
+	// restore heap property
+	h.shiftDown()
+
+	return root
+}
+
+func (h *MaxHeap) PopItem2() *Item {
 	if len(h.items) == 0 {
 		return nil
 	}
