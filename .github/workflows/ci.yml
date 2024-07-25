@@ -51,7 +51,7 @@ jobs:
       pull-requests: write # write permission needed to comment on PR
     steps:
       - id: report-step
-        uses: fgrosse/go-coverage-report@580e43ee23c68bf1587431305bed438843742d87
+        uses: fgrosse/go-coverage-report@671cf6b6dc4d7a6d8196f9259ce5d674b38782bb
         with:
           skip-comment: true
 
