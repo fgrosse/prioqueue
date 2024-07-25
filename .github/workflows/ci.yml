@@ -38,4 +38,4 @@ jobs:
       contents:      read  # to download code coverage results from unit_tests job
       pull-requests: write # write permission needed to comment on PR
     steps:
-      - uses: fgrosse/go-coverage-report@v1.0.2
+      - uses: fgrosse/go-coverage-report@01ee5ff151ab6148d4a30693f821b01bf2fe3bc8
