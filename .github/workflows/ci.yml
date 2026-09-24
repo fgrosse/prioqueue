@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - 'main'
+      - 'readme-screenshot-base'
 
 jobs:
   unit_tests:
@@ -38,4 +39,16 @@ jobs:
       contents:      read  # to download code coverage results from unit_tests job
       pull-requests: write # write permission needed to comment on PR
     steps:
-      - uses: fgrosse/go-coverage-report@v1.0.2
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      # The -baseline-* flags of fgrosse/go-coverage-report#110 are not released yet, so we build
+      # the binary from that branch. GITHUB_PATH takes precedence over the binary the action downloads.
+      - name: Install go-coverage-report from fgrosse/go-coverage-report#110
+        run: |
+          go install github.com/fgrosse/go-coverage-report/cmd/go-coverage-report@375e47666a137a3774cd54d5dcdb78846ba82ca2
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
+      - uses: fgrosse/go-coverage-report@baseline-selection
