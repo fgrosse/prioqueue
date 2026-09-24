@@ -87,6 +87,16 @@ func (h *MinHeap) Items() []*Item {
 	return h.items
 }
 
+// Clone returns a copy of the queue which can be modified without affecting
+// the original queue.
+func (h *MinHeap) Clone() *MinHeap {
+	c := NewMinHeap(len(h.items))
+	for _, item := range h.items {
+		c.items = append(c.items, &Item{ID: item.ID, Prio: item.Prio})
+	}
+	return c
+}
+
 // PopAndPush removes the item with the lowest priority value and adds a new
 // value to the heap in one operation. This is faster than two separate calls
 // to Pop and Push.

@@ -1,5 +1,6 @@
 // Package topk selects the items with the lowest or highest priority from a
-// larger set of items using a bounded priority queue.
+// larger set of items using a bounded priority queue. This needs O(n log k)
+// time and O(k) memory instead of sorting all n items.
 package topk
 
 import "github.com/fgrosse/prioqueue"
